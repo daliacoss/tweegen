@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Xml;
 using System.Xml.Linq;
-using System.IO;
 using System.Text.RegularExpressions;
 
 enum Tag {
@@ -110,12 +110,6 @@ class TweeParser {
 	public List<Subpassage> BodyToSubpassages(string body){
 		List<Subpassage> subpassages = new List<Subpassage>();
 		Subpassage sp = new Subpassage();
-		MatchCollection matches = null;
-
-		//parse all the escape characters...
-		//string expBase = "[{0}].*[{1}]", expLeft = "", expRight = "";
-
-				//Console.WriteLine(bold.Replace(body, "<strong>$2</strong>"));
 
 		//check for macros first so they don't get confused with xml
 		body = body.Replace("<<", "<"+MacroName+">");
@@ -134,37 +128,34 @@ class TweeParser {
 					RegexOptions.Compiled);
 				body = bold.Replace(body, "<"+ts.Key+">$2"+"</"+ts.Key+">");
 			}
-			if (s.Length == 2){
+			else if (s.Length == 2){
 				body = body.Replace(s[0],"<"+ts.Key+">");
 				body = body.Replace(s[1],"</"+ts.Key+">");
 			}
-
 		}
 
-		//must wrap xml in a parent element
+		//format xml to fit spec
 		body = "<passage>" + body + "</passage>";
-		//parse xml
+		//wrap all free text in <text></text>
+		XDocument tree = XDocument.Parse(body);
+		foreach (XElement node in tree.Elements()){
+			foreach (var enode in node.DescendantNodes()){
+				if (enode.GetType() == typeof(XText)){
+					XText tmp = (XText) enode;
+					enode.ReplaceWith(new XElement("text", tmp.Value));
+					//Console.WriteLine(enode + " : " + enode.GetType());
+				}
+			}
+		}
+
+		//now we parse the xml into a passage (list of subpassages)
+		foreach (XElement node in tree.Element("passage").Elements()){
+			Console.WriteLine(node);
+		}
 
 		sp.Text = body;
 		subpassages.Add(sp);
 		return subpassages;
-	}
-
-	protected void recursiveMatch(string s, string exp){
-		MatchCollection matches = Regex.Matches(s, exp);
-		if (matches.Count > 0){
-			foreach (Match m in matches){
-				Console.WriteLine(m.Value + " : " + m.Index);
-				//recursiveMatch(m.Value, exp);
-			}
-		}
-		else Console.WriteLine("ohno");
-	}
-
-	protected void parseMatch(MatchCollection matches){
-		if (matches!=null) foreach (Match m in matches){
-			Console.WriteLine(m.Value + ": " + m.Index);
-		}
 	}
 }
 
@@ -174,15 +165,7 @@ class TweeGen {
 		//:: End
 		var tree = tp.Parse("\n::Start\r\nthis text is ''bold''\n");
 		foreach (var i in tree){
-			Console.WriteLine(i.Value[0].Text);
+			//Console.WriteLine(i.Value[0].Text);
 		}
-		
-		var e = 3;
-		if ((e+=1) == 4) Console.WriteLine(e);
-		/*MatchCollection mc = Regex.Matches(@"<<ah >>[[link|passage]]", @"[(\[\[)(<<)].*[(\]\])(>>)]");
-		foreach (var m in mc){
-			//MatchCollection
-			Console.WriteLine(m);
-		}*/
 	}
 }
