@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Xml;
-using System.Xml.Linq;
+using System.Xml.Linq; //for xelement
 using System.Text.RegularExpressions;
 
 enum Tag {
@@ -20,23 +20,72 @@ enum Operator {
 	Eq,Neq,Lt,Lte,Gt,Gte,And,Not,Or
 }
 
+struct Condition {
+	public string Left;
+	public Operator Op;
+	public string Right;
+}
+
+class Subpassage {
+	public string Text = "";
+	public List<Tag> Formatting = new List<Tag>();
+
+	//we can just use the passage title for the link address
+	public string LinkAddress = "";
+
+	//we'll use this for if/else blocks maybe?
+	Subpassage Sub;
+
+	public Subpassage(): this("", new List<Tag>(), ""){
+	}
+
+	public Subpassage(string text, List<Tag> formatting, string linkAddress){
+		Text = text;
+		Formatting = new List<Tag>(formatting);
+		LinkAddress = linkAddress;
+	}
+
+	/* return deep copy of the subpassage */
+	public Subpassage Copy(){
+		Subpassage sp = new Subpassage(Text, Formatting, LinkAddress);
+		if (Sub != null){
+			sp.Sub = Sub.Copy();
+		}
+		return sp;
+	}
+
+	/* return descriptive, multi-line string */
+	public string ToLongString(){
+		string s = "Text: " + Text + "\nFormatting: ";
+		//string tags = "";
+		foreach (Tag t in Formatting){
+			s += t.ToString() + " ";
+		}
+		s += "\nLinkAddress: " + LinkAddress;
+		return s; 
+	}
+}
+
+class Passage : List<Subpassage>{
+	public string Title = "";
+
+	override public string ToString(){
+		return Title + " [" + Count.ToString() + " subpassages]";
+	}
+}
+
 class TweeParser {
-	public struct Condition {
-		string Var;
-		Operator Op;
-		string Value;
-	}
-	public class Subpassage {
-		public string Text;
-		public Dictionary<Tag,bool> Tags;
-		//we can just use the passage title for the link address
-		public string LinkAddress;
-
-		//we'll use this for nested macros maybe?
-		Subpassage Sub;
-	}
-
 	public string Stream;
+	public readonly Dictionary<string,Tag> TagMaps = new Dictionary<string,Tag>(){
+		{"link", Tag.Link},
+		{"strong", Tag.Bold},
+		{"em", Tag.Italic},
+		{"underline", Tag.Underline},
+		{"subscript", Tag.Subscript},
+		{"superscript", Tag.Superscript},
+		{"monospace", Tag.Monospace},
+		{"macro", Tag.Macro}
+	};
 	public readonly Dictionary<string,string[]> TagStrings = new Dictionary<string,string[]>(){
 		//tags that use the same strings for close and open will be used in regexes
 		//(macros are detected separately)
@@ -70,13 +119,18 @@ class TweeParser {
 		{"not",Operator.Not},
 		{"or",Operator.Or},
 	};
+	private Passage currentPassage;
+
+	public TweeParser(){
+		currentPassage = new Passage();
+	}
 
 	public void LoadStream(string file){
 
 	}
 
-	public Dictionary<string,List<Subpassage>> Parse(string stream){
-		Dictionary<string,List<Subpassage>> passageTree = new Dictionary<string,List<Subpassage>>();
+	public Dictionary<string,Passage> Parse(string stream){
+		Dictionary<string,Passage> passageTree = new Dictionary<string,Passage>();
 
 		//all titles begin with (newline):: and optional whitespace, and end with newline
 		stream = "\n" + stream;
@@ -100,17 +154,30 @@ class TweeParser {
 			if (start<end){
 				pbody = stream.Substring(start,end-start);
 				//parse passage body
-				passageTree[ptitle] = BodyToSubpassages(pbody);
+				passageTree[ptitle] = BodyToPassage(pbody, ptitle);
 			}
 		}
 
 		return passageTree;
 	}
 
-	public List<Subpassage> BodyToSubpassages(string body){
-		List<Subpassage> subpassages = new List<Subpassage>();
-		Subpassage sp = new Subpassage();
+	/* convert passage text to Passage instance */
+	public Passage BodyToPassage(string body, string title){
+		currentPassage.Clear();
+		currentPassage.Title = title;
 
+		XDocument tree = BodyToXml(body);
+
+		//now we parse the xml into a passage (list of subpassages)
+		foreach (XElement node in tree.Element("passage").Elements()){
+			recurseElements(node, new List<Tag>());
+		}
+
+		return currentPassage;
+	}
+
+	/* convert passage text to XML document (XDocument) */
+	public XDocument BodyToXml(string body){
 		//check for macros first so they don't get confused with xml
 		body = body.Replace("<<", "<"+MacroName+">");
 		body = body.Replace(">>", "</"+MacroName+">");
@@ -136,36 +203,55 @@ class TweeParser {
 
 		//format xml to fit spec
 		body = "<passage>" + body + "</passage>";
-		//wrap all free text in <text></text>
 		XDocument tree = XDocument.Parse(body);
-		foreach (XElement node in tree.Elements()){
-			foreach (var enode in node.DescendantNodes()){
-				if (enode.GetType() == typeof(XText)){
-					XText tmp = (XText) enode;
-					enode.ReplaceWith(new XElement("text", tmp.Value));
-					//Console.WriteLine(enode + " : " + enode.GetType());
-				}
+		applyText(tree);
+
+		return tree;
+	}
+
+	/*wrap all free text in <text></text>*/
+	protected void applyText(XContainer tree){
+		var nodes = tree.Nodes();
+		foreach (XNode enode in nodes){
+			if (enode is XText){
+				string val = ((XText) enode).Value;
+				enode.ReplaceWith(new XElement("text", val));
 			}
-		}
+			else if (enode is XContainer){
+				applyText((XContainer)enode);
+			}
 
-		//now we parse the xml into a passage (list of subpassages)
-		foreach (XElement node in tree.Element("passage").Elements()){
-			Console.WriteLine(node);
 		}
+	}
 
-		sp.Text = body;
-		subpassages.Add(sp);
-		return subpassages;
+	/* recursively turn XElement into subpassages and add them to currentPassage */
+	protected void recurseElements(XElement tree, List<Tag> formatting){
+		List<Tag> fcopy = new List<Tag>(formatting);
+		if (tree.Name == "text"){
+			Subpassage sp = new Subpassage();
+			sp.Text = tree.Value;
+			sp.Formatting = fcopy;
+			currentPassage.Add(sp);
+		}
+		else{		
+			fcopy.Add(TagMaps[tree.Name.ToString()]);
+			foreach (XElement el in tree.Elements()){
+				recurseElements(el,fcopy);
+			}
+		}	
 	}
 }
 
 class TweeGen {
 	static void Main(){
 		TweeParser tp = new TweeParser();
-		//:: End
-		var tree = tp.Parse("\n::Start\r\nthis text is ''bold''\n");
-		foreach (var i in tree){
-			//Console.WriteLine(i.Value[0].Text);
+		var tree = tp.Parse("\n::Start\r\nthis text is [[''bold //and italic __and underlined__//'']]\n");
+
+		foreach(KeyValuePair<string,Passage> kv in tree){
+			Console.WriteLine(kv.Value.ToString());
+			foreach(Subpassage sp in kv.Value){
+				Console.WriteLine(sp.ToLongString());
+			}
 		}
 	}
 }
