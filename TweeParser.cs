@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Xml;
 using System.Xml.Linq; //for xelement
 using System.Text.RegularExpressions;
 
+namespace Cosstropolis.Twee {
 enum Tag {
 	Link,
 	Bold,
@@ -56,12 +58,15 @@ class Subpassage {
 
 	/* return descriptive, multi-line string */
 	public string ToLongString(){
-		string s = "Text: " + Text + "\nFormatting: ";
-		//string tags = "";
+		return ToLongString("");
+	}
+	public string ToLongString(string indent){
+		string s = indent + "Text: " + Text + "\n";
+		s += indent + "Formatting: ";
 		foreach (Tag t in Formatting){
 			s += t.ToString() + " ";
 		}
-		s += "\nLinkAddress: " + LinkAddress;
+		s += "\n" + indent + "LinkAddress: " + LinkAddress + "\n";
 		return s; 
 	}
 }
@@ -69,8 +74,30 @@ class Subpassage {
 class Passage : List<Subpassage>{
 	public string Title = "";
 
+	public Passage(string title){
+		Title = title;
+	}
+
+	public Passage Copy(){
+		Passage p = new Passage(Title);
+		foreach (Subpassage sub in this){
+			p.Add(sub.Copy());
+		}
+
+		return p;
+	}
+
 	override public string ToString(){
 		return Title + " [" + Count.ToString() + " subpassages]";
+	}
+
+	public string ToLongString(){
+		string s = ToString() + "\n";
+		foreach (Subpassage sub in this){
+			s += sub.ToLongString("    ");
+		}
+
+		return s;
 	}
 }
 
@@ -122,22 +149,30 @@ class TweeParser {
 	private Passage currentPassage;
 
 	public TweeParser(){
-		currentPassage = new Passage();
+		currentPassage = new Passage("");
 	}
 
-	public void LoadStream(string file){
-
+	public void LoadStream(string filename){
+		Stream = File.ReadAllText(filename);
 	}
 
+	/* convert the loaded stream into a dict of Passages */
+	public Dictionary<string,Passage> Parse(){
+		return Parse(Stream);
+	}
+	/* convert .tw stream into a dictionary of Passages */
 	public Dictionary<string,Passage> Parse(string stream){
 		Dictionary<string,Passage> passageTree = new Dictionary<string,Passage>();
 
-		//all titles begin with (newline):: and optional whitespace, and end with newline
+		//after (newline):: and optional whitespace, title must begin with word character,
+		//may contain anything other than (newline), and must end with (newline)
 		stream = "\n" + stream;
-		MatchCollection matches = Regex.Matches(stream, @"\r*\n+::\s*\w+\r*\n+");
+		MatchCollection matches = Regex.Matches(stream, @"\r*\n+::\s*\w[^\r\n]*\r*\n+");
+		//MatchCollection matches = Regex.Matches(stream, @"\r*\n+::\s*\w+\r*\n+");
 		char[] charsToStrip = {':',' ','\n','\r'};
 		string ptitle, pbody;
 		int start, end;
+		
 		for (int i=0; i<matches.Count; i++){
 			ptitle = matches[i].Value.Trim(charsToStrip);
 
@@ -173,14 +208,17 @@ class TweeParser {
 			recurseElements(node, new List<Tag>());
 		}
 
-		return currentPassage;
+		return currentPassage.Copy();
 	}
 
 	/* convert passage text to XML document (XDocument) */
 	public XDocument BodyToXml(string body){
-		//check for macros first so they don't get confused with xml
-		body = body.Replace("<<", "<"+MacroName+">");
-		body = body.Replace(">>", "</"+MacroName+">");
+		//replace pointy brackets with entity names
+		body = body.Replace("<", "&lt;");
+		body = body.Replace(">", "&gt;");
+		//replace macro tags
+		body = body.Replace("&lt;&lt;", "<"+MacroName+">");
+		body = body.Replace("&gt;&gt;", "</"+MacroName+">");
 
 		//now do the other formatting tags
 		//regex stolen from Milan Negovan's MarkDownSharp:
@@ -204,13 +242,13 @@ class TweeParser {
 		//format xml to fit spec
 		body = "<passage>" + body + "</passage>";
 		XDocument tree = XDocument.Parse(body);
-		applyText(tree);
+		normalize(tree);
 
 		return tree;
 	}
 
 	/*wrap all free text in <text></text>*/
-	protected void applyText(XContainer tree){
+	protected void normalize(XContainer tree){
 		var nodes = tree.Nodes();
 		foreach (XNode enode in nodes){
 			if (enode is XText){
@@ -218,7 +256,10 @@ class TweeParser {
 				enode.ReplaceWith(new XElement("text", val));
 			}
 			else if (enode is XContainer){
-				applyText((XContainer)enode);
+				if (enode is XElement && ((XElement) enode).Name == "link"){
+					Console.WriteLine("found link");
+				}
+				normalize((XContainer)enode);
 			}
 
 		}
@@ -241,17 +282,4 @@ class TweeParser {
 		}	
 	}
 }
-
-class TweeGen {
-	static void Main(){
-		TweeParser tp = new TweeParser();
-		var tree = tp.Parse("\n::Start\r\nthis text is [[''bold //and italic __and underlined__//'']]\n");
-
-		foreach(KeyValuePair<string,Passage> kv in tree){
-			Console.WriteLine(kv.Value.ToString());
-			foreach(Subpassage sp in kv.Value){
-				Console.WriteLine(sp.ToLongString());
-			}
-		}
-	}
 }
