@@ -129,6 +129,7 @@ class TweeParser {
 		//{"macro", new string[2]{@"<<",@">>"}},
 	};
 	public readonly string MacroName = "macro";
+	public readonly string LinkAttributeName = "address";
 	//this time the strings are keys - we are more likely to search for "eq" than Operator.Eq
 	public readonly Dictionary<string,Operator> OpStrings = new Dictionary<string,Operator>(){
 		{"eq",Operator.Eq},
@@ -167,9 +168,9 @@ class TweeParser {
 		//after (newline):: and optional whitespace, title must begin with word character,
 		//may contain anything other than (newline), and must end with (newline)
 		stream = "\n" + stream;
-		MatchCollection matches = Regex.Matches(stream, @"\r*\n+::\s*\w[^\r\n]*\r*\n+");
+		MatchCollection matches = Regex.Matches(stream, @"\r*\n+::\s*\w[^\r\n]*\r*\n");
 		//MatchCollection matches = Regex.Matches(stream, @"\r*\n+::\s*\w+\r*\n+");
-		char[] charsToStrip = {':',' ','\n','\r'};
+		char[] charsToStrip = {':','\n','\r'};
 		string ptitle, pbody;
 		int start, end;
 		
@@ -205,7 +206,7 @@ class TweeParser {
 
 		//now we parse the xml into a passage (list of subpassages)
 		foreach (XElement node in tree.Element("passage").Elements()){
-			recurseElements(node, new List<Tag>());
+			recurseElements(node, new List<Tag>(), "");
 		}
 
 		return currentPassage.Copy();
@@ -257,7 +258,18 @@ class TweeParser {
 			}
 			else if (enode is XContainer){
 				if (enode is XElement && ((XElement) enode).Name == "link"){
-					Console.WriteLine("found link");
+					var el = (XElement) enode;
+					int seploc = el.Value.IndexOf('|');
+					string address;
+					//if the vertical bar exists, right side is address
+					if (seploc >= 0){
+						address = el.Value.Substring(seploc+1);
+						el.Value = el.Value.Substring(0, seploc);
+					}
+					else {
+						address = el.Value;
+					}
+					el.SetAttributeValue(LinkAttributeName, address);
 				}
 				normalize((XContainer)enode);
 			}
@@ -266,18 +278,20 @@ class TweeParser {
 	}
 
 	/* recursively turn XElement into subpassages and add them to currentPassage */
-	protected void recurseElements(XElement tree, List<Tag> formatting){
+	protected void recurseElements(XElement tree, List<Tag> formatting, string address){
 		List<Tag> fcopy = new List<Tag>(formatting);
 		if (tree.Name == "text"){
 			Subpassage sp = new Subpassage();
 			sp.Text = tree.Value;
 			sp.Formatting = fcopy;
+			sp.LinkAddress = address;
 			currentPassage.Add(sp);
 		}
 		else{		
 			fcopy.Add(TagMaps[tree.Name.ToString()]);
+			if (tree.Name == "link") address = tree.Attribute(LinkAttributeName).Value;
 			foreach (XElement el in tree.Elements()){
-				recurseElements(el,fcopy);
+				recurseElements(el,fcopy,address);
 			}
 		}	
 	}
