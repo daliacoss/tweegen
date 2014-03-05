@@ -289,7 +289,11 @@ class TweeParser {
 		}
 		else{		
 			fcopy.Add(TagMaps[tree.Name.ToString()]);
-			if (tree.Name == "link") address = tree.Attribute(LinkAttributeName).Value;
+			if (tree.Name == "link"){
+				//address = "nuthin";
+				//if (tree.Attribute("address") != null) address = tree.Attribute("address").Value;
+				//else address = "nuthin";// tree.Attribute(LinkAttributeName).Value;
+			}
 			foreach (XElement el in tree.Elements()){
 				recurseElements(el,fcopy,address);
 			}

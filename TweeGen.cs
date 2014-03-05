@@ -24,6 +24,7 @@ class TweeGen {
 		TweeParser tp = new TweeParser();
 		Dictionary<string,Passage> tree;
 		tp.LoadStream(extra[0]);
+		//tree = tp.Parse(":: StoryTitle\nArthur's Dream of the Dragon and the Bear\n:: completely equipped cabin\nKing Arthur, on a huge vessel with a host of knights,\nWas enclosed in __a__\n");
 		tree = tp.Parse();
 
 		foreach(KeyValuePair<string,Passage> kv in tree){

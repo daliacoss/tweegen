@@ -1,0 +1,600 @@
+﻿:: StoryTitle
+Arthur's Dream of the Dragon and the Bear
+
+
+:: Start
+<<display "King Arthur">>
+
+
+:: King Arthur
+[[King Arthur|completely equipped cabin]], on a huge vessel with a host of knights
+
+
+:: completely equipped cabin
+King Arthur, on a huge vessel with a host of knights,
+Was enclosed in a [[completely equipped cabin|richly]]
+
+
+:: richly
+King Arthur, on a huge vessel with a host of knights,
+Was enclosed in a completely equipped cabin,
+Resting on a [[richly|sent him to sleep]] arrayed bed
+
+
+:: sent him to sleep
+King Arthur, on a huge vessel with a host of knights,
+Was enclosed in a completely equipped cabin,
+Resting on a richly arrayed bed.
+And the swaying on the sea [[sent him to sleep|dreamed]].
+
+
+:: dreamed
+He [[dreamed|dragon]]
+
+
+:: dragon
+He dreamed that a [[dragon|dreadful]]
+
+
+:: dreadful
+He dreamed that a dragon [[dreadful|driving over the deep]] to behold
+
+
+:: driving over the deep
+He dreamed that a dragon dreadful to behold
+Came [[driving over the deep|drown]]
+
+
+:: drown
+He dreamed that a dragon dreadful to behold
+Came driving over the deep to [[drown|realms]] his people
+
+
+:: realms
+He dreamed that a dragon dreadful to behold
+Came driving over the deep to drown his people,
+Ranging directly from the [[realms|spite]] of the west
+
+
+:: spite
+He dreamed that a dragon dreadful to behold
+Came driving over the deep to drown his people,
+Ranging directly from the realms of the west
+And soaring in [[spite|surging sea]]
+
+
+:: surging sea
+He dreamed that a dragon dreadful to behold
+Came driving over the deep to drown his people,
+Ranging directly from the realms of the west
+And soaring in spite over the [[surging sea|crown neck covered]].
+
+
+:: StoryAuthor
+Unknown, Brian Stone, mno\
+<<set document.title to passage()>>\
+<<if passage() eq "Start">>\
+<<set document.title to "King Arthur">>\
+<<endif>>
+
+
+:: entirely
+With tremendous tongues his tail was dagged;
+Any contact would quickly kill a man!
+His feet were flourished in finest black
+And tipped with talons [[entirely|flames flared]] of gold
+
+
+:: tipped with talons
+With tremendous tongues his tail was dagged;
+Any contact would quickly kill a man!
+His feet were flourished in finest black
+And [[tipped with talons|entirely]]
+
+
+:: feet were flourished
+With tremendous tongues his tail was dagged;
+Any contact would quickly kill a man!
+His [[feet were flourished|tipped with talons]] in finest black
+
+
+:: would quickly kill a man
+With tremendous tongues his tail was dagged;
+Any contact [[would quickly kill a man|feet were flourished]]!
+
+
+:: tail
+With tremendous tongues his [[tail|would quickly kill a man]] was dagged
+
+
+:: tremendous tongues
+With [[tremendous tongues|tail]]
+
+
+:: marvellously mailed
+His crown and neck were completely covered
+With undulating azure in high enamel;
+Scales of pure silver sheathed his shoulders,
+Making the monster as if mantled with mail;
+His wings and wide belly were wonderfully coloured,
+And thus [[marvellously mailed|tremendous tongues]] he mounted aloft.
+
+
+:: wonderfully
+His crown and neck were completely covered
+With undulating azure in high enamel;
+Scales of pure silver sheathed his shoulders,
+Making the monster as if mantled with mail;
+His wings and wide belly were [[wonderfully|marvellously mailed]] coloured
+
+
+:: mantled
+His crown and neck were completely covered
+With undulating azure in high enamel;
+Scales of pure silver sheathed his shoulders,
+Making the monster as if [[mantled|wonderfully]] with mail
+
+
+:: monster
+His crown and neck were completely covered
+With undulating azure in high enamel;
+Scales of pure silver sheathed his shoulders,
+Making the [[monster|mantled]]
+
+
+:: pure silver sheathed his shoulders
+His crown and neck were completely covered
+With undulating azure in high enamel;
+Scales of [[pure silver|monster]] [[sheathed his shoulders|monster]]
+
+
+:: undulating azure high enamel
+His crown and neck were completely covered
+With [[undulating azure|pure silver sheathed his shoulders]] in [[high enamel|pure silver sheathed his shoulders]]
+
+
+:: crown neck covered
+His [[crown|undulating azure high enamel]] and [[neck|undulating azure high enamel]] were completely [[covered|undulating azure high enamel]]
+
+
+:: StoryMenu
+[[About The Authors]]
+
+
+
+
+:: flames flared
+With tremendous tongues his tail was dagged;
+Any contact would quickly kill a man!
+His feet were flourished in finest black
+And tipped with talons entirely of gold.
+Such venomous [[flames|on fire]] [[flared|on fire]] from his lips
+
+
+:: on fire
+With tremendous tongues his tail was dagged;
+Any contact would quickly kill a man!
+His feet were flourished in finest black
+And tipped with talons entirely of gold.
+Such venomous flames flared from his lips
+That the flood seemed [[on fire|flying flecks]]
+
+
+:: flying flecks
+With tremendous tongues his tail was dagged;
+Any contact would quickly kill a man!
+His feet were flourished in finest black
+And tipped with talons entirely of gold.
+Such venomous flames flared from his lips
+That the flood seemed on fire with the [[flying flecks|against him]].
+
+
+:: against him
+Then issuing out of the east [[against him|bear]]
+
+
+:: bear
+Then issuing out of the east against him
+Came a [[bear|fierce and black]]
+
+
+:: fierce and black
+Then issuing out of the east against him
+Came a bear [[fierce and black|clouds]]
+
+
+:: clouds
+Then issuing out of the east against him
+Came a bear fierce and black above in the [[clouds|paw post]]
+
+
+:: paw post
+Then issuing out of the east against him
+Came a bear fierce and black above in the clouds,
+Each [[paw|prodigious pads]] like a [[post|prodigious pads]]
+
+
+:: prodigious pads
+Then issuing out of the east against him
+Came a bear fierce and black above in the clouds,
+Each paw like a post, with [[prodigious pads|cruel curling claws]]
+
+
+:: cruel curling claws
+Then issuing out of the east against him
+Came a bear fierce and black above in the clouds,
+Each paw like a post, with prodigious pads
+Culminating in [[cruel curling claws|Hateful horrid]].
+
+
+:: Hateful horrid
+[[Hateful|his hair]] and [[horrid|his hair]]
+
+
+:: About The Authors
+The text in this Twine story is an excerpt (lines 756 to 805) from Brian Stone's modern translation/adaptation of the Alliterative Morte Arthure, a poem dating from about 1400 by an unknown author. My source of the translation is from Penguin Classics' King Arthur's Death, published in 1988. The book also includes Brian Stone's translation of the Stanzic Le Morte Arthur.
+
+Brian Stone was born in 1919, becoming in 1948 teacher as well as a director of plays. From 1959 he started translating Medieval stories and literature primarily for Penguin Classics, until his death in 1995.
+
+I (mno!) am a 21 year-old goofball who loves Twine, and a buncha other things too.
+
+<<back>>
+
+
+:: Roaring rage
+He sprang about, scowled and snarled with menace,
+And turned to attack with his terrible claws,
+[[Roaring|rocked]] with a [[rage|rocked]]
+
+
+:: claws
+He sprang about, scowled and snarled with menace,
+And turned to attack with his [[terrible|Roaring rage]] claws
+
+
+:: snarled
+He sprang about, scowled and [[snarled|claws]] with menace
+
+
+:: scowled
+He sprang about, [[scowled|snarled]]
+
+
+:: sprang
+He [[sprang|scowled]] about
+
+
+:: formed
+Hateful and horrid were his hair and the rest
+He was bow-legged and bristly and brutishly ugly,
+With foully matted fell and foaming lips -
+The vilest figure ever to be [[formed|sprang]]!
+
+
+:: figure
+Hateful and horrid were his hair and the rest
+He was bow-legged and bristly and brutishly ugly,
+With foully matted fell and foaming lips -
+The vilest [[figure|formed]]
+
+
+:: foaming
+Hateful and horrid were his hair and the rest
+He was bow-legged and bristly and brutishly ugly,
+With foully matted fell and [[foaming|figure]] lips
+
+
+:: fouly fell
+Hateful and horrid were his hair and the rest
+He was bow-legged and bristly and brutishly ugly,
+With [[foully|foaming]] matted [[fell|foaming]]
+
+
+:: brutishly
+Hateful and horrid were his hair and the rest
+He was bow-legged and bristly and [[brutishly|fouly fell]] ugly
+
+
+:: bristly
+Hateful and horrid were his hair and the rest
+He was bow-legged and [[bristly|brutishly]]
+
+
+:: bow-legged
+Hateful and horrid were his hair and the rest
+He was [[bow-legged|bristly]]
+
+
+:: his hair
+Hateful and horrid were [[his hair|bow-legged]] and the rest
+
+
+:: rocked
+He sprang about, scowled and snarled with menace,
+And turned to attack with his terrible claws,
+Roaring with a rage that [[rocked|savagely]] all the ground
+
+
+:: savagely
+He sprang about, scowled and snarled with menace,
+And turned to attack with his terrible claws,
+Roaring with a rage that rocked all the ground,
+So [[savagely|struck]]
+
+
+:: struck
+He sprang about, scowled and snarled with menace,
+And turned to attack with his terrible claws,
+Roaring with a rage that rocked all the ground,
+So savagely he [[struck|stormed]]
+
+
+:: stormed
+He sprang about, scowled and snarled with menace,
+And turned to attack with his terrible claws,
+Roaring with a rage that rocked all the ground,
+So savagely he struck as he [[stormed|From flew]] about.
+
+
+:: From flew
+[[From|furiously]] afar the dragon [[flew|furiously]]
+
+
+:: furiously
+From afar the dragon flew [[furiously|staggering]] at him
+
+
+:: staggering
+From afar the dragon flew furiously at him,
+Sending him [[staggering|sky]]
+
+
+:: sky
+From afar the dragon flew furiously at him,
+Sending him staggering off under the [[sky|Hitting hawk]]
+
+
+:: Hitting hawk
+From afar the dragon flew furiously at him,
+Sending him staggering off under the sky,
+[[Hitting|high]] him like a [[hawk|high]]
+
+
+:: high
+From afar the dragon flew furiously at him,
+Sending him staggering off under the sky,
+Hitting him like a hawk with [[high|fighting]] courage
+
+
+:: fighting
+From afar the dragon flew furiously at him,
+Sending him staggering off under the sky,
+Hitting him like a hawk with high courage,
+and [[fighting|feet fiery]]
+
+
+:: feet fiery
+From afar the dragon flew furiously at him,
+Sending him staggering off under the sky,
+Hitting him like a hawk with high courage,
+and fighting with [[feet|together]] and [[fiery|together]] breath
+
+
+:: red
+He ramped with such rage that he ripped open the ground,
+Which ran with [[red|rain from heaven]] blood
+
+
+:: ripped
+He ramped with such rage that he [[ripped|red]] open the ground
+
+
+:: ramped rage
+He [[ramped|ripped]] with such [[rage|ripped]]
+
+
+:: bloody
+But in battle the bear seemed the bigger one
+And boldly bit back with baleful fangs.
+He struck so savagely with his spiked claws
+That the dragon's breast and belly were [[bloody|ramped rage]] all over.
+
+
+:: breast belly
+But in battle the bear seemed the bigger one
+And boldly bit back with baleful fangs.
+He struck so savagely with his spiked claws
+That the dragon's [[breast|bloody]] and [[belly|bloody]]
+
+
+:: spiked
+But in battle the bear seemed the bigger one
+And boldly bit back with baleful fangs.
+He struck so savagely with his [[spiked|breast belly]] claws
+
+
+:: struck so savagely
+But in battle the bear seemed the bigger one
+And boldly bit back with baleful fangs.
+He [[struck so savagely|spiked]]
+
+
+:: baleful
+But in battle the bear seemed the bigger one
+And boldly bit back with [[baleful|struck so savagely]] fangs
+
+
+:: boldly bit back
+But in battle the bear seemed the bigger one
+And [[boldly bit back|baleful]]
+
+
+:: bear bigger
+But in battle the [[bear|boldly bit back]] seemed the [[bigger|boldly bit back]] one
+
+
+:: But battle
+[[But|bear bigger]] in [[battle|bear bigger]]
+
+
+:: together
+From afar the dragon flew furiously at him,
+Sending him staggering off under the sky,
+Hitting him like a hawk with high courage,
+and fighting with feet and fiery breath [[together|But battle]].
+
+
+:: rain from heaven
+He ramped with such rage that he ripped open the ground,
+Which ran with red blood like [[rain from heaven|done down]]!
+
+
+:: done down
+He ramped with such rage that he ripped open the ground,
+Which ran with red blood like rain from heaven!
+He'd have [[done down|sheer strength]] the dragon
+
+
+:: sheer strength
+He ramped with such rage that he ripped open the ground,
+Which ran with red blood like rain from heaven!
+He'd have done down the dragon by dint of [[sheer strength|wild]]
+
+
+:: wild
+He ramped with such rage that he ripped open the ground,
+Which ran with red blood like rain from heaven!
+He'd have done down the dragon by dint of sheer strength
+But for the [[wild|wielded]] fire
+
+
+:: wielded
+He ramped with such rage that he ripped open the ground,
+Which ran with red blood like rain from heaven!
+He'd have done down the dragon by dint of sheer strength
+But for the wild fire the dragon [[wielded|serpent soared]] in defence.
+
+
+:: serpent soared
+Then the [[serpent soared|zenith]]
+
+
+:: zenith
+Then the serpent soared to the [[zenith|dreadful ]]
+
+
+:: dreadful 
+Then the serpent soared to the zenith
+And dived down through the clouds with [[dreadful|talons]] impact
+
+
+:: talons
+Then the serpent soared to the zenith
+And dived down through the clouds with dreadful impact,
+Attacking the bear with his [[talons|tearing]]
+
+
+:: tearing
+Then the serpent soared to the zenith
+And dived down through the clouds with dreadful impact,
+Attacking the bear with his talons and [[tearing|tail crown]] his back
+
+
+:: tail crown
+Then the serpent soared to the zenith
+And dived down through the clouds with dreadful impact,
+Attacking the bear with his talons and tearing his back
+For ten feet between his [[tail|beating]] and his [[crown|beating]]
+
+
+:: beating
+Then the serpent soared to the zenith
+And dived down through the clouds with dreadful impact,
+Attacking the bear with his talons and tearing his back
+For ten feet between his tail and his crown,
+Thus [[beating|battering]] the bear down
+
+
+:: end
+.
+.
+.
+
+[[Re-read|Start]]?
+
+Or read [[about this poem and authors|About The Authors]]?
+
+
+:: period
+This bad dream so burdened the King aboard ship
+He nearly burst with bitter pain on his bed there lying[[...|end]]
+
+
+:: lying
+This bad dream so burdened the King aboard ship
+He nearly burst with bitter pain on his bed there [[lying|period]]
+
+
+:: there
+This bad dream so burdened the King aboard ship
+He nearly burst with bitter pain on his bed [[there|lying]]
+
+
+:: bed
+This bad dream so burdened the King aboard ship
+He nearly burst with bitter pain on his [[bed|there]]
+
+
+:: bitter
+This bad dream so burdened the King aboard ship
+He nearly burst with [[bitter|bed]] pain
+
+
+:: burst
+This bad dream so burdened the King aboard ship
+He nearly [[burst|bitter]]
+
+
+:: burdend
+This bad dream so [[burdened|burst]] the King aboard ship
+
+
+:: bad
+This [[bad|burdend]] dream
+
+
+:: likes
+Then the serpent soared to the zenith
+And dived down through the clouds with dreadful impact,
+Attacking the bear with his talons and tearing his back
+For ten feet between his tail and his crown,
+Thus beating the bear down and battering out his life -
+Let him fall into the sea-flood and float where he [[likes|bad]]!
+
+
+:: float
+Then the serpent soared to the zenith
+And dived down through the clouds with dreadful impact,
+Attacking the bear with his talons and tearing his back
+For ten feet between his tail and his crown,
+Thus beating the bear down and battering out his life -
+Let him fall into the sea-flood and [[float|likes]]
+
+
+:: fall
+Then the serpent soared to the zenith
+And dived down through the clouds with dreadful impact,
+Attacking the bear with his talons and tearing his back
+For ten feet between his tail and his crown,
+Thus beating the bear down and battering out his life -
+Let him [[fall|float]] into the sea-flood
+
+
+:: battering
+Then the serpent soared to the zenith
+And dived down through the clouds with dreadful impact,
+Attacking the bear with his talons and tearing his back
+For ten feet between his tail and his crown,
+Thus beating the bear down and [[battering|fall]] out his life
+
+
