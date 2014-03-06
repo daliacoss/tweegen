@@ -74,6 +74,7 @@ class Subpassage {
 class Passage : List<Subpassage>{
 	public string Title = "";
 
+	public Passage() : this(""){}
 	public Passage(string title){
 		Title = title;
 	}
@@ -199,17 +200,12 @@ class TweeParser {
 
 	/* convert passage text to Passage instance */
 	public Passage BodyToPassage(string body, string title){
-		currentPassage.Clear();
-		currentPassage.Title = title;
+		Passage p = new Passage();
 
 		XDocument tree = BodyToXml(body);
-
-		//now we parse the xml into a passage (list of subpassages)
-		foreach (XElement node in tree.Element("passage").Elements()){
-			recurseElements(node, new List<Tag>(), "");
-		}
-
-		return currentPassage.Copy();
+		p = applyFormatting(tree);
+		p.Title = title;
+		return p;
 	}
 
 	/* convert passage text to XML document (XDocument) */
@@ -250,11 +246,13 @@ class TweeParser {
 
 	/*wrap all free text in <text></text>*/
 	protected void normalize(XContainer tree){
-		var nodes = tree.Nodes();
+		var nodes = tree.DescendantNodes();
 		foreach (XNode enode in nodes){
+			//Console.WriteLine("*" + enode.GetType() + ": " + enode + "*");
 			if (enode is XText){
 				string val = ((XText) enode).Value;
-				enode.ReplaceWith(new XElement("text", val));
+				
+				//enode.ReplaceWith(new XElement("text", val));
 			}
 			else if (enode is XContainer){
 				if (enode is XElement && ((XElement) enode).Name == "link"){
@@ -271,10 +269,38 @@ class TweeParser {
 					}
 					el.SetAttributeValue(LinkAttributeName, address);
 				}
-				normalize((XContainer)enode);
+				//normalize((XContainer)enode);
 			}
 
 		}
+	}
+
+	/* create formatted Passage from XElement */
+	protected Passage applyFormatting(XContainer tree){
+		List<Tag> formatting = new List<Tag>();
+		Passage p = new Passage();
+		var nodes = tree.DescendantNodes();
+		string address = "";
+
+		//for everything inside the passage
+		foreach (XNode node in nodes){
+			if (node is XText){
+				//apply all formatting tags (ancestors)
+				foreach (XElement a in node.Ancestors()){
+					Tag t;
+					if (TagMaps.TryGetValue(a.Name.ToString(), out t)){
+						formatting.Add(t);
+					}
+					//get link address if there is one
+					if (a.Name == "link"){
+						address = a.Attribute(LinkAttributeName).Value;
+					}
+				}
+				Subpassage sp = new Subpassage(((XText)node).Value, formatting, address);
+				p.Add(sp.Copy());
+			}
+		}
+		return p;
 	}
 
 	/* recursively turn XElement into subpassages and add them to currentPassage */
