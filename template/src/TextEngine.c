@@ -30,7 +30,6 @@ void TextEngine_init(){
 		VDP_loadFontExt(&tweefont, i, 0);
 	}
 
-	//testProgram();
 	TextEngine_displayPassage(&p_Start);
 }
 
@@ -68,8 +67,6 @@ void TextEngine_displayPassage(Passage *p){
 
 /*draw sub starting at curPos, return ending position */
 static Vect2D_u16 displaySubpassage(Subpassage *sub, Vect2D_u16 pos){
-	//Vect2D_u16 pos;
-	//pos.x = pos.y = 0;
 	u16 j;
 
 	sub->positionStart.x = pos.x;
