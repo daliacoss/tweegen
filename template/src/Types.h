@@ -1,5 +1,8 @@
 #include <genesis.h>
 
+#define true TRUE
+#define false FALSE
+
 #define PASS_NUM_TAGS 10
 #define PASS_SUB_NUM_LINES 20
 
@@ -40,6 +43,7 @@ typedef struct _subpassage{
 	u8 formatting[PASS_NUM_TAGS];
 	struct _passage *linkAddress;
 	char *lines[PASS_SUB_NUM_LINES];
+	u8 active;
 	Vect2D_u16 positionStart;
 } Subpassage;
 

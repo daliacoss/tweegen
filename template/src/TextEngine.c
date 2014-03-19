@@ -1,6 +1,7 @@
 #include "TextEngine.h"
 
-static Vect2D_u16 displaySubpassage(Subpassage *sub, Vect2D_u16 pos);
+static Vect2D_u16 displaySubpassage(Subpassage *sub, Vect2D_u16 pos, u16 index);
+static void displayNextPassage();
 static void flashActiveLink();
 static void testProgram();
 static void cycleLink(s8 dir);
@@ -9,11 +10,14 @@ static void drawText(char text[], u8 x, u8 y);
 static void drawLink(char text[], u8 x, u8 y);
 static void drawLinkActive(char text[], u8 x, u8 y);
 
+u8 loading = TRUE;
+
 u8 marginX = 1;
 u8 marginY = 3;
 
 u8 buttonNext = BUTTON_RIGHT | BUTTON_DOWN;
 u8 buttonPrev = BUTTON_LEFT | BUTTON_UP;
+u8 buttonConfirm = BUTTON_A;
 
 /* private */
 u8 currentTextColour = 1;
@@ -30,7 +34,7 @@ void TextEngine_init(){
 		VDP_loadFontExt(&tweefont, i, 0);
 	}
 
-	TextEngine_displayPassage(&p_Start);
+	TextEngine_displayPassage(&p_drown);
 }
 
 void TextEngine_update(){
@@ -38,35 +42,45 @@ void TextEngine_update(){
 }
 
 void TextEngine_joyEvent(u16 joy, u16 changed, u16 state){
-	if ((BUTTON_A | BUTTON_RIGHT) & changed & state){
-		VDP_drawTextBG(
-			APLAN,
-			"WORLD",
-			TILE_ATTR(PALETTE_LINK_ACTIVE,0,1,0),
-			8,
-			11
-		);
+	static u16 lastStateButtonNext = 0; 
+	static u16 lastStateButtonPrev = 0; 
+
+	//only cycle if buttonNext has been released and pressed
+	if (getButtonDown(buttonNext) && !lastStateButtonNext){
+		if (!loading && !(buttonPrev & state)) cycleLink(1);
 	}
+	else if (getButtonDown(buttonPrev) && !lastStateButtonPrev){
+		if (!loading && !(buttonNext & state)) cycleLink(-1);
+	}
+
+	if (getButtonDown(buttonConfirm)){
+		displayNextPassage();
+	}
+
+	lastStateButtonNext = buttonNext & state;
+	lastStateButtonPrev = buttonPrev & state;
 }
 
 void TextEngine_displayPassage(Passage *p){
+	loading = TRUE;
+
 	u16 i,j;
 	u16 curLine=0, curCol=0;
 	Vect2D_u16 curPos;
 	curPos.x = curPos.y = 0;
-	Subpassage *sub;
 
 	currentPassage = p;
 
 	//for each subpassage
 	for (i=0; i < p->count; i++){
-		curPos = displaySubpassage(&(p->subs[i]), curPos);
-
+		curPos = displaySubpassage(&(p->subs[i]), curPos, i);
 	}
+
+	loading = FALSE;
 }
 
 /*draw sub starting at curPos, return ending position */
-static Vect2D_u16 displaySubpassage(Subpassage *sub, Vect2D_u16 pos){
+static Vect2D_u16 displaySubpassage(Subpassage *sub, Vect2D_u16 pos, u16 index){
 	u16 j;
 
 	sub->positionStart.x = pos.x;
@@ -74,7 +88,13 @@ static Vect2D_u16 displaySubpassage(Subpassage *sub, Vect2D_u16 pos){
 	// for each line in subpassage
 	for (j=0; j < sub->lineCount; j++, pos.y++){
 		if (sub->formatting[Link]){
-			drawLink(sub->lines[j], marginX+pos.x, marginY+pos.y);
+			if (sub->active){
+				drawLinkActive(sub->lines[j], marginX+pos.x, marginY+pos.y);
+				currentSubpassageIndex = index;
+			}
+			else {
+				drawLink(sub->lines[j], marginX+pos.x, marginY+pos.y);
+			}
 		}
 		else{
 			drawText(sub->lines[j], marginX+pos.x, marginY+pos.y);
@@ -90,6 +110,20 @@ static Vect2D_u16 displaySubpassage(Subpassage *sub, Vect2D_u16 pos){
 	pos.x = (sub->endWithNewline) ? 0 : pos.x + strlen(sub->lines[j-1]);
 
 	return pos;
+}
+
+void displayNextPassage(){
+	TextEngine_clearPassage();
+	TextEngine_displayPassage(
+		currentPassage->subs[currentSubpassageIndex].linkAddress
+	);
+}
+
+void TextEngine_clearPassage(){
+	u8 i;
+	for (i=0; i<28; i++){
+		VDP_clearTextLineBG(APLAN, i);	
+	}
 }
 
 static void drawText(char text[], u8 x, u8 y){
@@ -114,15 +148,40 @@ static void drawLinkActive(char text[], u8 x, u8 y){
 
 static void cycleLink(s8 dir){
 	u16 count = currentPassage->count;
+
+	//track this current subpassage so we can make it inactive later
+	Subpassage *oldsub = &(currentPassage->subs[currentSubpassageIndex]);
+	u16 oldindex = currentSubpassageIndex;
+
+	//go to next subpassage
 	u16 index = (u16) wrap(currentSubpassageIndex + dir, 0, count);
 	Subpassage *sub = &(currentPassage->subs[index]);
-	//currentSubpassageIndex += dir;
-	while (! sub->formatting[Link]){
 
+	//make old subpassage inactive and redraw it
+	oldsub->active = 0;
+	displaySubpassage(oldsub, oldsub->positionStart, oldindex);
+
+	//debug
+	char debug[20];
+	uintToStr(index, debug, 5);
+	VDP_drawText(debug, 2, 20);
+	uintToStr(currentSubpassageIndex, debug, 5);
+	VDP_drawText(debug, 2, 21);
+
+	//go through the subpassages until link is found
+	while (! sub->formatting[Link]){
 		index = (u16) wrap(index+dir, 0, count);
 		currentSubpassageIndex = index;
 		sub = &(currentPassage->subs[index]);
 	}
+
+	//debug
+	uintToStr(currentSubpassageIndex, debug, 5);
+	VDP_drawText(debug, 2, 22);
+
+	//make current subpassage active and redraw it
+	sub->active = 1;
+	displaySubpassage(sub, sub->positionStart, index);
 }
 
 static void testProgram(){
@@ -161,6 +220,9 @@ void VDP_loadFontExt(const TileSet *font, u8 colourIndex, u8 use_dma){
 	VDP_loadTileData(fontTiles, index, font->numTile, 0);
 }
 
+/* extended version of drawTextBG
+ * colour: colour index of all non-zero pixels in text bitmap
+ */
 void VDP_drawTextBGExt(u16 plan, const char *str, u16 flags, u16 x, u16 y, u8 colour){
 	u32 len;
 	u16 data[128];
@@ -184,14 +246,14 @@ void VDP_drawTextBGExt(u16 plan, const char *str, u16 flags, u16 x, u16 y, u8 co
 }
 
 static void flashActiveLink(){
-	static u16 color = 0x888, timer = 0, index = 0;
+	static u16 color = 0x666, timer = 0, index = 0;
 	u16 inc = 0x222;
 	static s8 dir = 1;
 
 	if (color >= 0xeee && dir > 0){
 		dir = -1;
 	}
-	else if (color <= 0x888 && dir < 0){
+	else if (color <= 0x666 && dir < 0){
 		dir = 1;
 	}
 
@@ -206,8 +268,9 @@ static void flashActiveLink(){
 	else timer++;
 }
 
+/* inclusive-exclusive wrap */
 s32 wrap(s32 n, s32 min, s32 max){
 	return (n<min) ? wrap(max-(n*-1), min, max) :
-		(n>max) ? wrap(n-max, min, max) :
+		(n>=max) ? wrap(n-max, min, max) :
 		n;
 }

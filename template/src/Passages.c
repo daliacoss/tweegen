@@ -15,6 +15,7 @@ Passage p_Start = {
 			{1,0,0,0,0,0,0,0,0,0},
 			&p_Start,
 			{".","","here is a link, "},
+			1
 		},
 		{
 			1,
@@ -30,6 +31,40 @@ Passage p_Start = {
 			&p_Start,
 			{"hyperlink"},
 		}
+	}	
+};
+
+Passage p_drown = {
+	4, {
+		{
+			4,
+			FALSE,
+			{0},
+			NULL,
+			{"He dreamed that a dragon","dreadful to behold","Came driving over the deep","to "},
+		},
+		{
+			1,
+			FALSE,
+			{1,0,0,0,0,0,0,0,0,0},
+			&p_Start,
+			{"drown"},
+			1
+		},
+		{
+			1,
+			FALSE,
+			{1,0,0,0,0,0,0,0,0,0},
+			&p_Start,
+			{" his "},
+		},
+		{
+			1,
+			FALSE,
+			{1,0,0,0,0,0,0,0,0,0},
+			&p_Start,
+			{"people"},
+		},
 	}	
 };
 

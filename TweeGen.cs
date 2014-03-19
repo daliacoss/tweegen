@@ -27,12 +27,6 @@ class TweeGen {
 		//tree = tp.Parse(":: StoryTitle\nArthur's Dream of the Dragon and the Bear\n:: completely equipped cabin\nKing Arthur, on a huge vessel with a host of knights,\nWas enclosed in __a__\n");
 		tree = tp.Parse();
 
-		Dictionary<string, int> dict = new Dictionary<string,int>();
-		dict["one"] = 1;
-		int t;
-		if (dict.TryGetValue("two", out t)) Console.WriteLine(t);
-		else Console.WriteLine("nope");
-
 		foreach(KeyValuePair<string,Passage> kv in tree){
 			Console.WriteLine(kv.Value.ToLongString());
 		}
