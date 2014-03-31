@@ -23,7 +23,7 @@ u8 buttonConfirm = BUTTON_A;
 u8 currentTextColour = 1;
 u8 currentTextPal = PAL0;
 Passage *currentPassage;
-u16 currentSubpassageIndex;
+s32 currentSubpassageIndex;
 //u16 currentNumLinks;
 
 void TextEngine_init(){
@@ -34,7 +34,7 @@ void TextEngine_init(){
 		VDP_loadFontExt(&tweefont, i, 0);
 	}
 
-	TextEngine_displayPassage(&p_drown);
+	TextEngine_displayPassage(&p_Start);
 }
 
 void TextEngine_update(){
@@ -63,6 +63,7 @@ void TextEngine_joyEvent(u16 joy, u16 changed, u16 state){
 
 void TextEngine_displayPassage(Passage *p){
 	loading = TRUE;
+	currentSubpassageIndex = 0;
 
 	u16 i,j;
 	u16 curLine=0, curCol=0;
@@ -77,6 +78,8 @@ void TextEngine_displayPassage(Passage *p){
 	}
 
 	loading = FALSE;
+
+	cycleLink(1);
 }
 
 /*draw sub starting at curPos, return ending position */
@@ -246,14 +249,14 @@ void VDP_drawTextBGExt(u16 plan, const char *str, u16 flags, u16 x, u16 y, u8 co
 }
 
 static void flashActiveLink(){
-	static u16 color = 0x666, timer = 0, index = 0;
+	static u16 color = 0x444, timer = 0, index = 0;
 	u16 inc = 0x222;
 	static s8 dir = 1;
 
 	if (color >= 0xeee && dir > 0){
 		dir = -1;
 	}
-	else if (color <= 0x666 && dir < 0){
+	else if (color <= 0x444 && dir < 0){
 		dir = 1;
 	}
 

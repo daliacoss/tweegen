@@ -2,4 +2,6 @@ tags.txt
 ignore
 *.exe
 *.bat
+*.twee
+*.tw
 template/out

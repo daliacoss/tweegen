@@ -31,12 +31,18 @@ struct Condition {
 class Subpassage {
 	public string Text = "";
 	public List<Tag> Formatting = new List<Tag>();
-
-	//we can just use the passage title for the link address
 	public string LinkAddress = "";
-
-	//we'll use this for if/else blocks maybe?
+	/*we'll use this for if/else blocks maybe?*/
 	Subpassage Sub;
+	public bool[] FormattingAsBoolArray {
+		get {
+			bool[] tags = new bool[10];
+			foreach (Tag t in Formatting){
+				tags[(int)t] = true;
+			}
+			return tags;
+		}
+	}
 
 	public Subpassage(): this("", new List<Tag>(), ""){
 	}
@@ -102,6 +108,10 @@ class Passage : List<Subpassage>{
 	}
 }
 
+class PassageCollection : Dictionary<string, Passage>{
+
+}
+
 class TweeParser {
 	public string Stream;
 	public readonly Dictionary<string,Tag> TagMaps = new Dictionary<string,Tag>(){
@@ -129,6 +139,7 @@ class TweeParser {
 		//we need to escape these so they don't get confused with xml
 		//{"macro", new string[2]{@"<<",@">>"}},
 	};
+
 	public readonly string MacroName = "macro";
 	public readonly string LinkAttributeName = "address";
 	//this time the strings are keys - we are more likely to search for "eq" than Operator.Eq
@@ -159,12 +170,13 @@ class TweeParser {
 	}
 
 	/* convert the loaded stream into a dict of Passages */
-	public Dictionary<string,Passage> Parse(){
+	public PassageCollection Parse(){
 		return Parse(Stream);
 	}
 	/* convert .tw stream into a dictionary of Passages */
-	public Dictionary<string,Passage> Parse(string stream){
-		Dictionary<string,Passage> passageTree = new Dictionary<string,Passage>();
+	public PassageCollection Parse(string stream){
+		//Dictionary<string,Passage> passageTree = new Dictionary<string,Passage>();
+		PassageCollection passageTree = new PassageCollection();
 
 		//after (newline):: and optional whitespace, title must begin with word character,
 		//may contain anything other than (newline), and must end with (newline)
@@ -177,7 +189,7 @@ class TweeParser {
 		
 		for (int i=0; i<matches.Count; i++){
 			ptitle = matches[i].Value.Trim(charsToStrip);
-
+			ptitle = ptitle.TrimStart(' ');
 			//find the start of a passage
 			start = matches[i].Index + matches[i].Value.Length;
 			//find the end of the passage
@@ -224,11 +236,12 @@ class TweeParser {
 			var s = ts.Value;
 			//add all of the tag strings to the regex
 			if (s.Length == 1){
-				Regex bold = new Regex(String.Format(exp, s[0]),
+				// rename bold to something else
+				Regex tag = new Regex(String.Format(exp, s[0]),
 					RegexOptions.IgnorePatternWhitespace | 
 					RegexOptions.Singleline | 
 					RegexOptions.Compiled);
-				body = bold.Replace(body, "<"+ts.Key+">$2"+"</"+ts.Key+">");
+				body = tag.Replace(body, "<"+ts.Key+">$2"+"</"+ts.Key+">");
 			}
 			else if (s.Length == 2){
 				body = body.Replace(s[0],"<"+ts.Key+">");
@@ -269,9 +282,7 @@ class TweeParser {
 					}
 					el.SetAttributeValue(LinkAttributeName, address);
 				}
-				//normalize((XContainer)enode);
 			}
-
 		}
 	}
 

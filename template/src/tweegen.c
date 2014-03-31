@@ -11,7 +11,6 @@ static void init(){
 	JOY_setEventHandler(&joyEvent);
 
 	Palettes_init();
-	Passages_init();
 	TextEngine_init();
 	VDP_waitVSync();
 }

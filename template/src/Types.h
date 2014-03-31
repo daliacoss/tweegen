@@ -1,10 +1,10 @@
 #include <genesis.h>
 
-#define true TRUE
-#define false FALSE
+#define true 1
+#define false 0
 
 #define PASS_NUM_TAGS 10
-#define PASS_SUB_NUM_LINES 20
+#define PASS_SUB_NUM_LINES 40
 
 typedef enum{
 	Link,
