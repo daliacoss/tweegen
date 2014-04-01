@@ -3,8 +3,8 @@
 Passage p_StoryTitle = {
 	1, {
 		{
-			4, false, {false,false,false,false,false,false,false,false,false,false,}, NULL,
-			{"Arthur's Dream of the Dragon and the B", "ear", "", "", }
+			1, false, {false,false,false,false,false,false,false,false,false,false,}, NULL,
+			{"Arthur's Dream of the Dragon and the Bear", }
 		},
 
 	}
@@ -20,8 +20,8 @@ Passage p_Start = {
 			{"Arthur", }
 		},
 		{
-			5, false, {true,false,false,false,false,false,false,false,false,false,}, &p_completely_equipped_cabin,
-			{", on a huge vessel", "with a host of knig", "hts", "", "", }
+			2, false, {false,false,false,false,false,false,false,false,false,false,}, NULL,
+			{", on a huge vessel", "with a host of knights", }
 		},
 
 	}
@@ -29,29 +29,37 @@ Passage p_Start = {
 Passage p_completely_equipped_cabin = {
 	2, {
 		{
-			4, false, {false,false,false,false,false,false,false,false,false,false,}, NULL,
-			{"King Arthur, on a huge vessel", "with a h", "ost of knights,", "Was enclosed in a ", }
+			3, false, {false,false,false,false,false,false,false,false,false,false,}, NULL,
+			{"King Arthur, on a huge vessel", "with a host of knights,", "Was enclosed in a ", }
 		},
 		{
-			1, false, {true,false,false,false,false,false,false,false,false,false,}, &p_richly,
-			{"completely equipped cabin", }
+			2, false, {true,false,false,false,false,false,false,false,false,false,}, &p_richly,
+			{"completely equipped", "cabin", }
 		},
 
 	}
 };
 Passage p_richly = {
-	3, {
+	5, {
 		{
-			6, false, {false,false,false,false,false,false,false,false,false,false,}, NULL,
-			{"King Arthur, on a huge vessel", "with a h", "ost of knights,", "Was enclosed in a comp", "letely equipped cabin,", "Resting on a ", }
+			5, false, {false,false,false,false,false,false,false,false,false,false,}, NULL,
+			{"King Arthur, on a huge vessel", "with a host of knights,", "Was enclosed in a completely equipped", "cabin,", "Resting on a ", }
 		},
 		{
 			1, false, {true,false,false,false,false,false,false,false,false,false,}, &p_sent_him_to_sleep,
 			{"richly", }
 		},
 		{
-			3, false, {true,false,false,false,false,false,false,false,false,false,}, &p_sent_him_to_sleep,
-			{" arrayed bed", "", "", }
+			1, false, {false,false,false,false,false,false,false,false,false,false,}, NULL,
+			{" arrayed ", }
+		},
+		{
+			1, false, {true,false,false,false,false,false,false,false,false,false,}, &p_sent_him_to_sleep,
+			{"bed", }
+		},
+		{
+			1, false, {false,false,false,false,false,false,false,false,false,false,}, NULL,
+			{".", }
 		},
 
 	}
@@ -59,16 +67,16 @@ Passage p_richly = {
 Passage p_sent_him_to_sleep = {
 	3, {
 		{
-			10, false, {false,false,false,false,false,false,false,false,false,false,}, NULL,
-			{"King Arthur, on a huge vessel", "with a h", "ost of knights,", "Was enclosed in a comp", "letely equipped cabin,", "Resting on a ri", "chly arrayed bed.", "And the swaying on t", "he sea", "", }
+			7, false, {false,false,false,false,false,false,false,false,false,false,}, NULL,
+			{"King Arthur, on a huge vessel", "with a host of knights,", "Was enclosed in a completely equipped", "cabin,", "Resting on a richly arrayed bed.", "And the swaying on the sea", "", }
 		},
 		{
 			1, false, {true,false,false,false,false,false,false,false,false,false,}, &p_dreamed,
 			{"sent him to sleep", }
 		},
 		{
-			3, false, {true,false,false,false,false,false,false,false,false,false,}, &p_dreamed,
-			{".", "", "", }
+			1, false, {false,false,false,false,false,false,false,false,false,false,}, NULL,
+			{".", }
 		},
 
 	}
@@ -110,8 +118,8 @@ Passage p_dreadful = {
 			{"dreadful", }
 		},
 		{
-			3, false, {true,false,false,false,false,false,false,false,false,false,}, &p_driving_over_the_deep,
-			{" to behold", "", "", }
+			1, false, {false,false,false,false,false,false,false,false,false,false,}, NULL,
+			{" to behold", }
 		},
 
 	}
@@ -119,8 +127,8 @@ Passage p_dreadful = {
 Passage p_driving_over_the_deep = {
 	2, {
 		{
-			4, false, {false,false,false,false,false,false,false,false,false,false,}, NULL,
-			{"He dreamed that a dragon", "dreadful to b", "ehold", "Came ", }
+			3, false, {false,false,false,false,false,false,false,false,false,false,}, NULL,
+			{"He dreamed that a dragon", "dreadful to behold", "Came ", }
 		},
 		{
 			1, false, {true,false,false,false,false,false,false,false,false,false,}, &p_drown,
@@ -132,16 +140,16 @@ Passage p_driving_over_the_deep = {
 Passage p_drown = {
 	3, {
 		{
-			5, false, {false,false,false,false,false,false,false,false,false,false,}, NULL,
-			{"He dreamed that a dragon", "dreadful to b", "ehold", "Came driving over the deep", "to ", }
+			4, false, {false,false,false,false,false,false,false,false,false,false,}, NULL,
+			{"He dreamed that a dragon", "dreadful to behold", "Came driving over the deep", "to ", }
 		},
 		{
 			1, false, {true,false,false,false,false,false,false,false,false,false,}, &p_realms,
 			{"drown", }
 		},
 		{
-			3, false, {true,false,false,false,false,false,false,false,false,false,}, &p_realms,
-			{" his people", "", "", }
+			1, false, {false,false,false,false,false,false,false,false,false,false,}, NULL,
+			{" his people", }
 		},
 
 	}
@@ -149,16 +157,16 @@ Passage p_drown = {
 Passage p_realms = {
 	3, {
 		{
-			8, false, {false,false,false,false,false,false,false,false,false,false,}, NULL,
-			{"He dreamed that a dragon", "dreadful to b", "ehold", "Came driving over the deep", "to dr", "own his people,", "Ranging directly from ", "the ", }
+			5, false, {false,false,false,false,false,false,false,false,false,false,}, NULL,
+			{"He dreamed that a dragon", "dreadful to behold", "Came driving over the deep", "to drown his people,", "Ranging directly from the ", }
 		},
 		{
 			1, false, {true,false,false,false,false,false,false,false,false,false,}, &p_spite,
 			{"realms", }
 		},
 		{
-			4, false, {true,false,false,false,false,false,false,false,false,false,}, &p_spite,
-			{"", "of the west", "", "", }
+			2, false, {false,false,false,false,false,false,false,false,false,false,}, NULL,
+			{"", "of the west", }
 		},
 
 	}
@@ -166,8 +174,8 @@ Passage p_realms = {
 Passage p_spite = {
 	2, {
 		{
-			11, false, {false,false,false,false,false,false,false,false,false,false,}, NULL,
-			{"He dreamed that a dragon", "dreadful to b", "ehold", "Came driving over the deep", "to dr", "own his people,", "Ranging directly from ", "the realms", "of the west", "And soaring in ", "", }
+			7, false, {false,false,false,false,false,false,false,false,false,false,}, NULL,
+			{"He dreamed that a dragon", "dreadful to behold", "Came driving over the deep", "to drown his people,", "Ranging directly from the realms", "of the west", "And soaring in ", }
 		},
 		{
 			1, false, {true,false,false,false,false,false,false,false,false,false,}, &p_surging_sea,
@@ -177,10 +185,14 @@ Passage p_spite = {
 	}
 };
 Passage p_surging_sea = {
-	1, {
+	2, {
 		{
-			13, false, {false,false,false,false,false,false,false,false,false,false,}, NULL,
-			{"He dreamed that a dragon", "dreadful to b", "ehold", "Came driving over the deep", "to dr", "own his people,", "Ranging directly from ", "the realms", "of the west", "And soaring in ", "spite", "over the surging sea.", "", }
+			8, false, {false,false,false,false,false,false,false,false,false,false,}, NULL,
+			{"He dreamed that a dragon", "dreadful to behold", "Came driving over the deep", "to drown his people,", "Ranging directly from the realms", "of the west", "And soaring in spite", "over the surging sea.", }
+		},
+		{
+			1, false, {true,false,false,false,false,false,false,false,false,false,}, &p_Start,
+			{" ", }
 		},
 
 	}

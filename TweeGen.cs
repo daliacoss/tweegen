@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Cosstropolis.Twee;
@@ -13,6 +14,7 @@ class TweeGen {
 	/* generate string for C struct instance */
 	static public string GeneratePassageStruct(Passage p){
 		string stream = "";
+		int startColumn = 0;
 
 		/*
 		Passage p_MyTitle = {
@@ -30,7 +32,11 @@ class TweeGen {
 		foreach (Subpassage sub in p){
 			//get list of lines in subpassage
 			var text = escapeChars(sub.Text);
-			string[] lines = insertBreaks(text,ScreenWidth-(ScreenMarginX*2),true).Split('\n');
+			var textAfterInsert = insertBreaks(text,ScreenWidth-(ScreenMarginX*2),startColumn,true);
+			string[] lines = textAfterInsert.Key.Split('\n');
+			startColumn = textAfterInsert.Value;
+
+			//lines = (from l in lines select l.TrimStart(' ')).ToArray();
 
 			stream += "\t\t{\n";
 
@@ -62,22 +68,29 @@ class TweeGen {
 		return head + stream + foot;
 	}
 
-	/* naive newline insertion - does not preserve words */
-	static protected string insertBreaks(string s, int width, bool removeWindowsNl){
+	/* naive newline insertion - does not preserve words 
+	 * returns new string and last column position
+	*/
+	static protected KeyValuePair<string, int> insertBreaks(string s, int width, int start, bool removeWindowsNl){
 		string copy = "";
-		int i = 0;
+		int i = start;
 		foreach (char c in s){
 			//copy char and remove windows newline if necessary
 			if (!(removeWindowsNl && c == '\r')){
 				copy += c;
 			}
-			//break to new line when we have reached the width
-			if (i % width == width - 1){
-				copy += '\n';
+			//reset i if newline is found
+			else if (c == '\n'){
+				i = 0;
 			}
-			i++;
+			//break to new line when we have reached the width
+			else if (i > 0 && i % width == 0){
+				copy += '\n';
+				i++;
+			}
+			//i++;
 		}
-		return copy;
+		return new KeyValuePair<string, int>(copy, i);
 	}
 
 	static protected string escapeChars(string s){
@@ -116,6 +129,7 @@ class TweeGen {
 			hfile.WriteLine("#include \"Types.h\"");
 			foreach(KeyValuePair<string,Passage> kv in tree){
 				cfile.Write(TweeGen.GeneratePassageStruct(kv.Value));
+				//cfile.Write(kv.Value.ToLongString());
 				hfile.WriteLine("extern Passage p_" + kv.Value.Title.Replace(' ','_') + ";");
 			}
 		}

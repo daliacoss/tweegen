@@ -215,6 +215,7 @@ class TweeParser {
 		Passage p = new Passage();
 
 		XDocument tree = BodyToXml(body);
+
 		p = applyFormatting(tree);
 		p.Title = title;
 		return p;
@@ -257,11 +258,10 @@ class TweeParser {
 		return tree;
 	}
 
-	/*wrap all free text in <text></text>*/
+	/*format all <link>s to have proper attributes*/
 	protected void normalize(XContainer tree){
 		var nodes = tree.DescendantNodes();
 		foreach (XNode enode in nodes){
-			//Console.WriteLine("*" + enode.GetType() + ": " + enode + "*");
 			if (enode is XText){
 				string val = ((XText) enode).Value;
 				
@@ -310,6 +310,8 @@ class TweeParser {
 				Subpassage sp = new Subpassage(((XText)node).Value, formatting, address);
 				p.Add(sp.Copy());
 			}
+			formatting.Clear();
+			address = "";
 		}
 		return p;
 	}
