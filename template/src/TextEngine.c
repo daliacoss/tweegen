@@ -130,6 +130,8 @@ void TextEngine_clearPassage(){
 }
 
 static void drawText(char text[], u8 x, u8 y){
+	static u8 letterDelay = 0;
+	u16 i;
 	VDP_drawTextBGExt(
 		APLAN,
 		text,
